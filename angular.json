@@ -17,6 +17,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "lodash"
+            ],
             "outputPath": "dist/omt-front",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -27,12 +30,22 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/leaflet/dist/images/",
+                "output": "./assets"
+              }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "./node_modules/leaflet/dist/leaflet.css",
+              "node_modules/bootstrap/scss/bootstrap.scss",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -71,6 +84,9 @@
               "browserTarget": "OMT-front:build:development"
             }
           },
+          "options": {
+            "proxyConfig": "src/proxy.conf.json"
+          },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
@@ -100,5 +116,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "58c5fa2e-cc9b-4044-9c94-306be3ef217d"
   }
 }

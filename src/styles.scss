@@ -1,1 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap');
+
+.circle-label {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	color: white;
+	font-family: 'Roboto';
+	font-size: larger;
+	font-weight: bold;
+	margin-bottom: 3em;
+  }
