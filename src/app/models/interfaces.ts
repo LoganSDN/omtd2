@@ -29,11 +29,13 @@ export interface JSONVehData {
 		oid: string,
 		marque: string,
 		modele: string,
+		enloid: number;
 		enlLatitude: number,
 		enlLongitude: number,
 		enlRaison_social_site: string,
 		enlAdresse: string,
 		enlCode_postal: string,
+		livoid: number;
 		livLatitude: number,
 		livLongitude: number,
 		livRaison_social_site: string,

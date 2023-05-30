@@ -48,7 +48,7 @@ export class LayerService {
   constructor(private http: HttpClient,
     private loadService: LoadService,
     private parseService: ParseService) { }
-  
+
 
   private removeLayers(layers: any[], map: L.Map): void {
     layers.forEach(layer => {
@@ -58,17 +58,40 @@ export class LayerService {
     });
   }
 
-  makeDotsLayer(map: L.Map, mapData: Map<any, any>) {
+  makeDotsLayer(map, mapData) {
+    console.log(mapData);
+
     mapData.forEach((value, key) => {
-      this.dotscloudLayer = L.GeoJSON.geometryToLayer(value.feature, {
+      const popupContent = `<b>OID : </b>${value.feature.properties.oid}</br>
+        <b>Ligne addr1 : </b>${value.feature.properties.ligne_addr1}</br>
+        <b>Ligne addr2 : </b>${value.feature.properties.ligne_addr2}</br>
+        <b>Raison social site : </b>${value.feature.properties.raison_social_site}</br>
+        <b>Code postal : </b>${value.feature.properties.code_postal}</br>
+        <b>Nbre de vehicules : </b>${value.total}</br>
+        <b>Vehicules:</b>
+<ul>
+  ${value.vehs.map((veh) => `
+    <li style="border: 1px solid black; padding: 5px; margin-bottom: 5px;">
+      <b>OID:</b> ${veh.oid}<br>
+      <b>VEH:</b> ${veh.veh}<br>
+      <b>livAddr1:</b> ${veh.livAddr1}<br>
+      <b>livAddr2:</b> ${veh.livAddr2}
+    </li>
+  `).join('')}
+</ul>`;
+
+
+      const dotscloudLayer = L.GeoJSON.geometryToLayer(value.feature, {
         style: this.style,
         pointToLayer: (feature, latlng) => {
-          const marker = this.createCircleMarker(latlng, 'green', 10)
-          this.dotsMarkers.push(marker as any);
-          return (marker);
+          const marker = this.createCircleMarker(latlng, 'green', 10);
+          this.dotsMarkers.push(marker);
+          return marker;
         },
-      }).bindPopup(JSON.stringify(value.feature.properties) + value.total).addTo(map);
-    })
+      }).bindPopup(popupContent).addTo(map);
+
+      this.dotscloudLayer = dotscloudLayer;
+    });
   }
 
   removeValueLayer(map: L.Map) {
@@ -120,7 +143,7 @@ export class LayerService {
     });
   }
 
-  private computeTotalVehs(value: any[]) : number {
+  private computeTotalVehs(value: any[]): number {
     let total: number = 0;
     value.forEach((item) => {
       total += item.total
@@ -131,8 +154,8 @@ export class LayerService {
   private addCircleToLayer(map: L.Map, layer: L.Layer, color: string, value: any, option?: string): void {
     const layerCenter = (layer as any).getBounds().getCenter();
     const circleMarker = this.createCircleMarker(layerCenter, color)
-      .bindPopup(`Nombres de concessions : ${value.total}</br>
-                  Total vehicules: ${this.computeTotalVehs(value.concessions)}`);
+      .bindPopup(`<b>Nombres de concessions : </b>${value.total}</br>
+                  <b>Total vehicules: </b>${this.computeTotalVehs(value.concessions)}`);
     this.circleMarkers.push(circleMarker);
 
     // circleMarker.on('dblclick', () => {
